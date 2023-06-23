@@ -17,6 +17,7 @@ import ReactPlayer from "react-player";
 const PostModal = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
+
   const [media, setMedia] = useState("");
   const [shareImage, setShareImage] = useState("");
   const [desc, setDesc] = useState("");
@@ -32,6 +33,12 @@ const PostModal = (props) => {
   };
 
   const postHandler = async () => {
+    if (!shareImage && !vidurl && !desc) {
+      alert(
+        "All the fields cannot be empty. Try adding image or video url or a caption"
+      );
+      return;
+    }
     props.closeit();
     dispatch(postsActions.startLoading());
     const postsCollection = collection(db, "AllPosts");
@@ -99,8 +106,8 @@ const PostModal = (props) => {
           }}
         />
         <User>
-          <img src="/public/Images/user.svg" />
-          <span>arun18</span>
+          <img src={user.photoUrl} />
+          <span>{user.name}</span>
         </User>
         <textarea
           rows={3}
@@ -176,6 +183,12 @@ const ImgContainer = styled.div`
   width: 100%;
   max-height: 45vh;
   overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 0.5em;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #0a66c2;
+  }
 `;
 const VidContainer = styled.div`
   width: 100%;
@@ -233,13 +246,14 @@ const Header = styled.div`
     background-color: rgba(0, 0, 0, 0.2);
     height: 2rem;
     width: 2rem;
+    border-radius: 0.3rem;
   }
 `;
 const User = styled.div`
   margin: 0.5rem 0;
   display: flex;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: center;
   & > img {
     margin-left: 5px;
@@ -248,6 +262,7 @@ const User = styled.div`
   }
   & > span {
     font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
   }
 `;
 const VideoLink = styled.input`

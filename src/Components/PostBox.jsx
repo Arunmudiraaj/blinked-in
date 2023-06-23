@@ -1,10 +1,12 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const PostBox = (props) => {
+  const userImg = useSelector((state) => state.auth.photoUrl);
   return (
     <Container>
       <Top>
-        <img src="/public/Images/user.svg" />
+        <img src={userImg} />
         <div
           style={{ width: "100%" }}
           onClick={() => {
@@ -45,6 +47,9 @@ const Top = styled.div`
     outline: none;
     margin: 0 0.5rem;
     border-radius: 1rem;
+  }
+  input {
+    cursor: pointer;
   }
 `;
 const Bottom = styled.div`

@@ -5,10 +5,15 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { auth } from "../firebase";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Welcome = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth);
   auth.onAuthStateChanged((user) => {
     if (user) {
       const data = {
@@ -24,9 +29,14 @@ const Welcome = () => {
 
   const signoutHandler = () => {
     auth.signOut();
-    // dispatch(authActions.logout());
     navigate("/login");
+    // dispatch(authActions.logout());
   };
+  // useEffect(() => {
+  //   if (!curUser) {
+  //     navigate("/login");
+  //   }
+  // }, [curUser, navigate]);
   return (
     <Container>
       <Actions>
@@ -67,10 +77,7 @@ const Welcome = () => {
             <span>Notifications</span>
           </div>
           <User>
-            <img
-              src="/public/Images/user.svg"
-              style={{ borderRadius: "0.8rem" }}
-            />
+            <img src={user.photoUrl} style={{ borderRadius: "0.8rem" }} />
             <span
               style={{
                 display: "flex",
@@ -158,6 +165,7 @@ const NavBar = styled.div`
     font-family: sans-serif;
     font-size: 0.7rem;
     display: flex;
+    cursor: pointer;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -198,6 +206,7 @@ const User = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   & > img {
     width: 1.5rem;
   }

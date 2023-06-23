@@ -10,6 +10,16 @@ const postsSlice = createSlice({
     addPost: (state, action) => {
       state.posts.unshift(action.payload);
     },
+    addComment: (state, action) => {
+      const i = state.posts.findIndex((item) => item.id === action.payload.id);
+      if (i !== -1) {
+        const newComments = [
+          ...state.posts[i].comments,
+          action.payload.comment,
+        ];
+        state.posts[i] = { ...state.posts[i], comments: newComments };
+      }
+    },
     startLoading: (state, action) => {
       state.isLoading = true;
     },

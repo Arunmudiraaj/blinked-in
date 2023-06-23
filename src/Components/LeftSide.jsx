@@ -2,15 +2,15 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 const LeftSide = () => {
-  const name = useSelector((state) => state.auth.name);
+  const user = useSelector((state) => state.auth);
 
   return (
     <Container>
       <Card></Card>
-      <img src="/public/Images/user.svg" />
+      <img src={user.photoUrl} />
       <div>
         <Greet>
-          <b>Welcome, {name}</b>
+          <b>Welcome, {user.name}</b>
         </Greet>
         <div style={{ color: "#0a66c2", fontSize: "small" }}>Add a photo</div>
       </div>

@@ -3,8 +3,11 @@ import Footer from "../Components/Footer";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleAuth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 const Login = () => {
   const navigate = useNavigate();
+  const [user] = useAuthState(auth);
   const signInHandler = async () => {
     try {
       await signInWithPopup(auth, googleAuth);
@@ -15,6 +18,11 @@ const Login = () => {
       alert("Something went wrong");
     }
   };
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   return (
     <>
       <Container>

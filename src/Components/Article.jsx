@@ -6,9 +6,12 @@ import ReactPlayer from "react-player";
 import { useRef } from "react";
 import { db } from "../firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { postsActions } from "../store/postsSlice";
+import { BiCommentDetail } from "react-icons/bi";
 const Article = (props) => {
   const commentRef = useRef();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
   const post = props.post;
   const [showComments, setShowComments] = useState(false);
@@ -33,7 +36,9 @@ const Article = (props) => {
     const articleDoc = doc(db, "AllPosts", post.id);
     const newComments = [...post.comments, comment];
     const res = await updateDoc(articleDoc, { comments: newComments });
+    dispatch(postsActions.addComment({ id: post.id, comment: comment }));
     console.log(res);
+    commentRef.current.value = "";
   };
   return (
     <Container>
@@ -59,17 +64,18 @@ const Article = (props) => {
       </SharedMedia>
       <Interactions>
         <Likes>
-          <AiFillLike /> <span>17</span>
+          <AiFillLike size={"1.5rem"} color="#0a66c2" /> <span>17</span>
         </Likes>
         <Comments onClick={displayComments}>
-          <FaComment /> <span>5</span>
+          <BiCommentDetail size={"1.5rem"} />{" "}
+          <span>{post.comments.length}</span>
         </Comments>
       </Interactions>
       {showComments && (
         <CommentSection onClick={backdropClicked} id="backdrop">
           <Modal>
             <Close onClick={closeComments}>X</Close>
-            <Title>Comments Under {post.author.name} post</Title>
+            <Title>Comments Under {post.author.name}'s post</Title>
             <div
               style={{ backgroundColor: "black", height: "1px", margin: "2px" }}
             />
@@ -82,24 +88,20 @@ const Article = (props) => {
                 post.comments.map((item) => (
                   <Comment key={item.id}>
                     <div>
-                      <img src="/public/Images/user.svg" />
+                      <img src={item.photoUrl} />
                     </div>
                     <CommentBody>
                       <Top>
-                        <b>arun18</b>
+                        <b>{item.name}</b>
                         {/* <span>aiuehviu@44gmail.com</span> */}
                       </Top>
-                      <CommentText>
-                        Actual Comment Lorem ipsum dolor sit amet consectetur
-                        adipisicing el. Dolores, expedita enim neque vel
-                        corrupti minima eos iusto tenetur id laudantium!
-                      </CommentText>
+                      <CommentText>{item.comment}</CommentText>
                     </CommentBody>
                   </Comment>
                 ))
               )}
               <CommentInput>
-                <img src="/public/Images/user.svg" />
+                <img src={user.photoUrl} />
                 <input ref={commentRef} placeholder="Post your comment" />
                 <button onClick={postCommentHandler}>post</button>
               </CommentInput>
@@ -219,7 +221,7 @@ const Interactions = styled.div`
   justify-content: space-between;
   gap: 1.2rem;
   padding: 0.4rem 0.6rem 0.2rem 0.6rem;
-  font-size: smaller;
+  font-size: medium;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 `;
 const Likes = styled.span`
@@ -227,19 +229,21 @@ const Likes = styled.span`
   justify-content: center;
   gap: 0.2rem;
   align-items: center;
+  cursor: pointer;
 `;
 const Comments = styled.div`
   display: flex;
   justify-content: center;
   gap: 0.2rem;
   align-items: center;
+  cursor: pointer;
 `;
 const CommentSection = styled.div`
   position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  z-index: 99;
   top: 0;
   bottom: 0;
   left: 0;
@@ -276,7 +280,18 @@ const AllComments = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow-y: auto;
+  height: 80%;
   gap: 0.5rem;
+  &::-webkit-scrollbar {
+    width: 0.3em;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #4084c8;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #0a66c2;
+  }
 `;
 const Comment = styled.div`
   box-sizing: border-box;

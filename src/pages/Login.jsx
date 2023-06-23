@@ -1,7 +1,20 @@
-import React from "react";
 import styled from "styled-components";
 import Footer from "../Components/Footer";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleAuth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
+  const signInHandler = async () => {
+    try {
+      await signInWithPopup(auth, googleAuth);
+
+      // dispatch(authActions.login(user));
+      navigate("/");
+    } catch (err) {
+      alert("Something went wrong");
+    }
+  };
   return (
     <>
       <Container>
@@ -16,7 +29,7 @@ const Login = () => {
           <h2>Welcome to your professional community</h2>
           <div>
             <img src="/public/Images/login-hero.svg" />
-            <GoogleBtn>
+            <GoogleBtn onClick={signInHandler}>
               <img src="/public/Images/google.svg" />{" "}
               <span>Sign in with Google</span>
             </GoogleBtn>

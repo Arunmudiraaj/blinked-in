@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Welcome from "./pages/Welcome";
 import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Welcome />}>
-          <Route path="/" element={<div></div>} />
+          <Route path="/" element={<Home />} />
           <Route path="about" element={<div>about</div>} />
           <Route path="settings" element={<div>settings</div>} />
         </Route>

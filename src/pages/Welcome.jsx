@@ -1,9 +1,32 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BiSearch } from "react-icons/bi";
 import { AiFillCaretDown } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
+import { auth } from "../firebase";
+
 const Welcome = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      const data = {
+        name: user.displayName,
+        email: user.email,
+        photoUrl: user.photoURL,
+      };
+      dispatch(authActions.login(data));
+    } else {
+      dispatch(authActions.logout());
+    }
+  });
+
+  const signoutHandler = () => {
+    auth.signOut();
+    // dispatch(authActions.logout());
+    navigate("/login");
+  };
   return (
     <Container>
       <Actions>
@@ -43,7 +66,7 @@ const Welcome = () => {
             <img src="/public/Images/nav-notifications.svg" />
             <span>Notifications</span>
           </div>
-          <div>
+          <User>
             <img
               src="/public/Images/user.svg"
               style={{ borderRadius: "0.8rem" }}
@@ -57,7 +80,8 @@ const Welcome = () => {
             >
               Me <AiFillCaretDown />
             </span>
-          </div>
+            <Signout onClick={signoutHandler}>Sign out</Signout>
+          </User>
         </NavBar>
       </Actions>
       <Content>
@@ -70,6 +94,7 @@ const Welcome = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 const Actions = styled.div`
   background-color: white;
@@ -84,6 +109,8 @@ const Actions = styled.div`
 `;
 const Content = styled.div`
   min-height: 100vh;
+  max-width: 1200px;
+  width: 100%;
   padding-top: 2.3rem;
   @media (max-width: 800px) {
     padding: 2.3rem 0 3.4rem 0;
@@ -146,6 +173,38 @@ const NavBar = styled.div`
     padding-bottom: 0.2rem;
     padding-top: 0.1rem;
     gap: 0;
+  }
+`;
+const Signout = styled.div`
+  background-color: white;
+  padding: 0.3rem 0.5rem;
+  color: red;
+  border-radius: 0.5rem;
+  position: absolute;
+  top: 2.4rem;
+  cursor: pointer;
+  display: none;
+  border: 1px solid black;
+  @media (max-width: 800px) {
+    position: absolute;
+    top: -1.2rem;
+  }
+`;
+const User = styled.div`
+  width: 4rem;
+  font-family: sans-serif;
+  font-size: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  & > img {
+    width: 1.5rem;
+  }
+  &:hover {
+    ${Signout} {
+      display: block;
+    }
   }
 `;
 

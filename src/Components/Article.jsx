@@ -35,9 +35,9 @@ const Article = (props) => {
     const comment = { ...user, comment: text, id: Math.random().toString() };
     const articleDoc = doc(db, "AllPosts", post.id);
     const newComments = [...post.comments, comment];
-    const res = await updateDoc(articleDoc, { comments: newComments });
     dispatch(postsActions.addComment({ id: post.id, comment: comment }));
-    console.log(res);
+    await updateDoc(articleDoc, { comments: newComments });
+
     commentRef.current.value = "";
   };
   return (

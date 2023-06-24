@@ -4,9 +4,9 @@ const postsSlice = createSlice({
   name: "allposts",
   initialState: { isLoading: false, posts: [] },
   reducers: {
-    setAllPosts: (state, action) => {
-      state.posts = action.payload;
-    },
+    // setAllPosts: (state, action) => {
+    //   state.posts = action.payload;
+    // },
     addPost: (state, action) => {
       state.posts.unshift(action.payload);
     },
@@ -25,6 +25,9 @@ const postsSlice = createSlice({
     },
     stopLoading: (state, action) => {
       state.isLoading = false;
+    },
+    addPosts: (state, action) => {
+      state.posts = state.posts.concat(action.payload);
     },
   },
 });

@@ -276,6 +276,7 @@ const Buttons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 `;
 const MediaButtons = styled.div`
   text-align: center;
@@ -292,6 +293,7 @@ const Post = styled.button`
   background-color: #0a66c2;
   color: white;
   border: none;
+  cursor: pointer;
   border-radius: 1rem;
 `;
 

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import plus from "../assets/Images/plus-icon.svg";
 const RightSide = () => {
   return (
     <>
@@ -8,7 +8,7 @@ const RightSide = () => {
           <div>Groups</div>
           <Events>
             <span>Events</span>
-            <img src="/public/Images/plus-icon.svg" />
+            <img src={plus} />
           </Events>
           <div>Follow Hashtags</div>
           <div

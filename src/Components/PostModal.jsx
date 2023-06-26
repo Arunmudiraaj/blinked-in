@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { BsFillImageFill, BsCameraVideoFill } from "react-icons/bs";
+import { BsFillImageFill } from "react-icons/bs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage, db } from "../firebase";
 import { v4 } from "uuid";
@@ -13,15 +13,14 @@ import {
   getDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import ReactPlayer from "react-player";
+
 const PostModal = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
 
-  const [media, setMedia] = useState("");
+  const [media, setMedia] = useState(false);
   const [shareImage, setShareImage] = useState("");
   const [desc, setDesc] = useState("");
-  const [vidurl, setVidurl] = useState("");
   const handleImageChange = (e) => {
     const image = e.target.files[0];
 
@@ -33,10 +32,8 @@ const PostModal = (props) => {
   };
 
   const postHandler = async () => {
-    if (!shareImage && !vidurl && !desc) {
-      alert(
-        "All the fields cannot be empty. Try adding image or video url or a caption"
-      );
+    if (!shareImage && !desc) {
+      alert("All the fields cannot be empty. Try adding an image or a caption");
       return;
     }
     props.closeit();
@@ -50,7 +47,6 @@ const PostModal = (props) => {
         const post = {
           author: user,
           imgUrl: url,
-          videoUrl: "",
           caption: desc,
           likes: [],
           comments: [],
@@ -69,7 +65,6 @@ const PostModal = (props) => {
       const post = {
         author: user,
         imgUrl: "",
-        videoUrl: vidurl,
         caption: desc,
         likes: [],
         comments: [],
@@ -111,7 +106,7 @@ const PostModal = (props) => {
         </User>
         <textarea
           rows={3}
-          placeholder="What do you want to talk about"
+          placeholder="What do you want to talk about?"
           style={{ resize: "none" }}
           value={desc}
           onChange={(e) => {
@@ -128,7 +123,7 @@ const PostModal = (props) => {
             e.target.value = null;
           }}
         />
-        {media === "photo" && <label htmlFor="photo">Choose a photo</label>}
+        {media && <label htmlFor="photo">Choose a photo</label>}
         {shareImage && (
           <ImgContainer>
             <img
@@ -137,39 +132,15 @@ const PostModal = (props) => {
             />
           </ImgContainer>
         )}
-        {vidurl && (
-          <VidContainer>
-            <ReactPlayer url={vidurl} width={"100%"} height={"20rem"} />
-          </VidContainer>
-        )}
-        {media === "video" && (
-          <VideoLink
-            type="text"
-            placeholder="Please input a video link"
-            value={vidurl}
-            onChange={(e) => {
-              setVidurl(e.target.value);
-            }}
-          />
-        )}
+
         <Buttons>
           <MediaButtons>
             <button
               onClick={() => {
-                setMedia("photo");
-                setVidurl("");
+                setMedia((pre) => !pre);
               }}
             >
               <BsFillImageFill height={"sm"} width={"sm"} />
-            </button>
-
-            <button
-              onClick={() => {
-                setShareImage("");
-                setMedia("video");
-              }}
-            >
-              <BsCameraVideoFill height={"lg"} width={"lg"} />
             </button>
           </MediaButtons>
           <Post onClick={postHandler}>Post</Post>
@@ -190,10 +161,7 @@ const ImgContainer = styled.div`
     background-color: #0a66c2;
   }
 `;
-const VidContainer = styled.div`
-  width: 100%;
-  max-height: 45vh;
-`;
+
 const Backdrop = styled.div`
   padding: 1rem;
   position: fixed;
@@ -265,12 +233,7 @@ const User = styled.div`
     font-weight: 600;
   }
 `;
-const VideoLink = styled.input`
-  width: calc(100% - 0.6rem);
-  margin-top: 3px;
-  outline: none;
-  padding: 0.3rem;
-`;
+
 const Buttons = styled.div`
   margin-top: 1rem;
   display: flex;

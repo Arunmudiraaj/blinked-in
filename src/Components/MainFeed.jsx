@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import PostBox from "./PostBox";
 import PostModal from "./PostModal";
 import styled from "styled-components";
@@ -7,7 +7,10 @@ import { postsActions } from "../store/postsSlice";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
+import spinner from "../assets/Images/spinner.svg";
+import tick from "../assets/Images/tick.png";
 const MainFeed = () => {
+  const firstRender = useRef(true);
   const [dataFromBE, setDataFromBE] = useState([]);
   const [showBottom, setShowBottom] = useState(false);
   const [loadPosts, setLoadPosts] = useState([]);
@@ -40,6 +43,8 @@ const MainFeed = () => {
 
       setDataFromBE(allPosts);
       setLoadPosts([0, 4]);
+      console.log("initial");
+
       // dispatch(postsActions.setAllPosts(allPosts));
     };
     getData();
@@ -63,10 +68,17 @@ const MainFeed = () => {
     window.addEventListener("scroll", handleInfiniteScroll);
     return () => window.removeEventListener("scroll", handleInfiniteScroll);
   }, []);
+
   useEffect(() => {
-    let posts = dataFromBE.slice(loadPosts[0], loadPosts[1]);
-    if (posts.length > 0) {
-      dispatch(postsActions.addPosts(posts));
+    if (firstRender.current) {
+      firstRender.current = false;
+    } else {
+      let posts = dataFromBE.slice(loadPosts[0], loadPosts[1]);
+      if (posts.length > 0) {
+        console.log("initial");
+        dispatch(postsActions.addPosts(posts));
+      }
+      // console.log("useEffect called on subsequent renders");
     }
   }, [loadPosts]);
   return (
@@ -75,7 +87,7 @@ const MainFeed = () => {
       <PostBox show={showCreatePost} />
       {load && (
         <Spinner>
-          <img src="/public/Images/spinner.svg" />
+          <img src={spinner} />
         </Spinner>
       )}
 
@@ -84,7 +96,7 @@ const MainFeed = () => {
       ))}
       {showBottom && (
         <Bottom>
-          <img src="/public/Images/tick.png" />
+          <img src={tick} />
           <div>You're All Caught Up</div>
           <span>You've seen it all. You've missed nothing</span>
         </Bottom>

@@ -5,6 +5,9 @@ import { auth, googleAuth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import linkedin from "../assets/Images/linkedin.png";
+import heroimg from "../assets/Images/login-hero.svg";
+import googleimg from "../assets/Images/google.svg";
 const Login = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
@@ -27,7 +30,7 @@ const Login = () => {
     <>
       <Container>
         <Head>
-          <img src="/public/Images/linkedin.png" height={"40rem"} alt="logo" />
+          <img src={linkedin} height={"40rem"} alt="logo" />
           <div>
             <Join>Join Now</Join>
             <Signin>Sign in</Signin>
@@ -36,9 +39,9 @@ const Login = () => {
         <Section>
           <h2>Welcome to your professional community</h2>
           <div>
-            <img src="/public/Images/login-hero.svg" />
+            <img src={heroimg} />
             <GoogleBtn onClick={signInHandler}>
-              <img src="/public/Images/google.svg" />{" "}
+              <img src={googleimg} />
               <span>Sign in with Google</span>
             </GoogleBtn>
           </div>

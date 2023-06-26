@@ -27,7 +27,15 @@ const postsSlice = createSlice({
       state.isLoading = false;
     },
     addPosts: (state, action) => {
-      state.posts = state.posts.concat(action.payload);
+      const newData = [...action.payload];
+      newData.forEach((item) => {
+        const isExisting = state.posts.some((obj) => obj.id === item.id);
+        if (!isExisting) {
+          state.posts.push(item);
+        }
+      });
+
+      // state.posts = state.posts.concat(action.payload);
     },
   },
 });

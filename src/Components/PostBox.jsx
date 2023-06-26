@@ -13,7 +13,7 @@ const PostBox = (props) => {
             props.show();
           }}
         >
-          <input disabled placeholder="Start a post" />
+          <input readOnly placeholder="Start a post" />
         </div>
       </Top>
       <Bottom>

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { AiFillLike } from "react-icons/ai";
-import { FaComment } from "react-icons/fa";
+
 import { useState } from "react";
-import ReactPlayer from "react-player";
+
 import { useRef } from "react";
 import { db } from "../firebase";
 import { doc, updateDoc } from "firebase/firestore";
@@ -52,16 +52,7 @@ const Article = (props) => {
       </User>
       <Caption>{post.caption}</Caption>
 
-      <SharedMedia>
-        {post.imgUrl && <img src={post.imgUrl} />}
-        {post.videoUrl && (
-          <ReactPlayer
-            url={post.videoUrl}
-            width={"100%"}
-            style={{ objectFit: "contain" }}
-          />
-        )}
-      </SharedMedia>
+      <SharedMedia>{post.imgUrl && <img src={post.imgUrl} />}</SharedMedia>
       <Interactions>
         <Likes>
           <AiFillLike size={"1.5rem"} color="#0a66c2" /> <span>17</span>

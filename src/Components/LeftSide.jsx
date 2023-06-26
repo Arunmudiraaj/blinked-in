@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import cardImg from "../assets/Images/card-bg.svg";
 
 const LeftSide = () => {
   const user = useSelector((state) => state.auth);
@@ -37,7 +38,7 @@ const LeftSide = () => {
 const Card = styled.div`
   width: 100%;
   border-radius: 0.5rem 0.5rem 0 0;
-  background-image: url("/public/Images/card-bg.svg");
+  background-image: url(${cardImg});
   height: 3rem;
 `;
 const Greet = styled.div`

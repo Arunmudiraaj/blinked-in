@@ -1,13 +1,20 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { BiSearch } from "react-icons/bi";
 import { AiFillCaretDown } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
 import { auth } from "../firebase";
-import { useEffect } from "react";
+
 import { useSelector } from "react-redux";
-import { useAuthState } from "react-firebase-hooks/auth";
+
+import { Link } from "react-router-dom";
+import HomeImg from "../assets/Images/nav-home.svg";
+import jobsImg from "../assets/Images/nav-jobs.svg";
+import myNetwork from "../assets/Images/nav-network.svg";
+import messagesImg from "../assets/Images/nav-messaging.svg";
+import notificationImg from "../assets/Images/nav-notifications.svg";
+import linkedinImg from "../assets/Images/linkedin.png";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -41,7 +48,7 @@ const Welcome = () => {
     <Container>
       <Actions>
         <Search>
-          <img src="/public/Images/linkedin.png" />
+          <img src={linkedinImg} />
           <BiSearch
             size={"1.5rem"}
             style={{
@@ -56,26 +63,36 @@ const Welcome = () => {
           <input placeholder="Search" />
         </Search>
         <NavBar>
-          <div>
-            <img src="/public/Images/nav-home.svg" />
-            <span>Home</span>
-          </div>
-          <div>
-            <img src="/public/Images/nav-network.svg" />
-            <span>My Network</span>
-          </div>
-          <div>
-            <img src="/public/Images/nav-jobs.svg" />
-            <span>Jobs</span>
-          </div>
-          <div>
-            <img src="/public/Images/nav-messaging.svg" />
-            <span>Messages</span>
-          </div>
-          <div>
-            <img src="/public/Images/nav-notifications.svg" />
-            <span>Notifications</span>
-          </div>
+          <Link to={"/"} style={{ textDecoration: "none" }}>
+            <div>
+              <img src={HomeImg} />
+              <span>Home</span>
+            </div>
+          </Link>
+          <Link to={"/mynetwork"} style={{ textDecoration: "none" }}>
+            <div>
+              <img src={myNetwork} />
+              <span>My Network</span>
+            </div>
+          </Link>
+          <Link to={"/jobs"} style={{ textDecoration: "none" }}>
+            <div>
+              <img src={jobsImg} />
+              <span>Jobs</span>
+            </div>
+          </Link>
+          <Link to={"/messages"} style={{ textDecoration: "none" }}>
+            <div>
+              <img src={messagesImg} />
+              <span>Messages</span>
+            </div>
+          </Link>
+          <Link to={"notifications"} style={{ textDecoration: "none" }}>
+            <div>
+              <img src={notificationImg} />
+              <span>Notifications</span>
+            </div>
+          </Link>
           <User>
             <img src={user.photoUrl} style={{ borderRadius: "0.8rem" }} />
             <span
@@ -98,6 +115,21 @@ const Welcome = () => {
   );
 };
 
+// const activeClassName = "active-link";
+
+// const StyledNavLink = styled(NavLink)`
+//   /* Define your styles for the NavLink */
+//   color: black;
+//   text-decoration: none;
+
+//   /* Styles for the active link */
+//   &.${activeClassName} {
+//     font-weight: bold;
+//     color: blue !important;
+//     background-color: red;
+//   }
+// `;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -115,7 +147,7 @@ const Actions = styled.div`
   }
 `;
 const Content = styled.div`
-  min-height: 100vh;
+  /* min-height: 100vh; */
   max-width: 1200px;
   width: 100%;
   padding-top: 2.3rem;
@@ -160,7 +192,8 @@ const NavBar = styled.div`
   gap: 2rem;
   justify-content: space-around;
   align-items: center;
-  & > div {
+
+  div {
     width: 4rem;
     font-family: sans-serif;
     font-size: 0.7rem;
@@ -169,6 +202,7 @@ const NavBar = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     & > img {
       width: 1.5rem;
     }
@@ -185,13 +219,14 @@ const NavBar = styled.div`
 `;
 const Signout = styled.div`
   background-color: white;
-  padding: 0.3rem 0.5rem;
+  padding: 0.3rem 0.1rem;
   color: red;
   border-radius: 0.5rem;
   position: absolute;
   top: 2.4rem;
+  text-align: center;
   cursor: pointer;
-  display: none;
+  display: none !important;
   border: 1px solid black;
   @media (max-width: 800px) {
     position: absolute;
@@ -212,7 +247,7 @@ const User = styled.div`
   }
   &:hover {
     ${Signout} {
-      display: block;
+      display: block !important;
     }
   }
 `;
